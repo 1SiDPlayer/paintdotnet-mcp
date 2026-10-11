@@ -53,6 +53,8 @@ internal static class TextEditorChecks
             using var form = (Form)Activator.CreateInstance(assembly.GetType("PaintDotNetMcp.Bridge.TextEditorForm")!,
                 BindingFlags.Instance | BindingFlags.NonPublic, null, [initial, new object(), new object(), new object()], null)!;
             Control Field(string name) => (Control)form.GetType().GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(form)!;
+            if (form.Text != (italian ? "Editor di testo MCP — Date" : "MCP Text Editor — Date"))
+                throw new Exception("Text editor window title did not follow the OS UI culture.");
             if (Field("_text").Text.Replace("\r\n", "\n") != initial.Text.Text || Field("_font").Text != "Malgun Gothic" ||
                 ((NumericUpDown)Field("_size")).Value != 26 || ((NumericUpDown)Field("_a")).Value != 180 ||
                 !((CheckBox)Field("_bold")).Checked || ((CheckBox)Field("_replace")).Checked || string.IsNullOrEmpty(Field("_error").Text))
