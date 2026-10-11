@@ -14,15 +14,19 @@ internal static class DocumentNavigation
         if (target is null) return null;
         foreach (var name in names)
         {
-            try
+            for (var type = target.GetType(); type is not null; type = type.BaseType)
             {
-                var property = target.GetType().GetProperty(name, Members);
-                if (property is not null && property.GetIndexParameters().Length == 0)
-                    return property.GetValue(target);
-                var field = target.GetType().GetField(name, Members);
-                if (field is not null) return field.GetValue(target);
+                try
+                {
+                    var property = type.GetProperty(name, Members | BindingFlags.DeclaredOnly);
+                    if (property is not null && property.GetIndexParameters().Length == 0 &&
+                        property.GetValue(target) is { } propertyValue)
+                        return propertyValue;
+                    var field = type.GetField(name, Members | BindingFlags.DeclaredOnly);
+                    if (field?.GetValue(target) is { } fieldValue) return fieldValue;
+                }
+                catch { /* Internal host members may differ between Paint.NET versions. */ }
             }
-            catch { /* Internal host members may differ between Paint.NET versions. */ }
         }
         return null;
     }
