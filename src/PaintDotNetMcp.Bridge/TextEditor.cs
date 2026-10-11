@@ -99,7 +99,7 @@ internal sealed class TextEditorForm : Form
     internal TextEditorForm(TextLayerResult initial, object workspace, object document, object layer)
     {
         _initial = initial; _workspace = workspace; _document = document; _layer = layer;
-        Text = "Editor di testo MCP — " + initial.Name;
+        Text = L("Editor di testo MCP", "MCP Text Editor") + " — " + initial.Name;
         Name = "PaintDotNetMcp.TextEditor";
         AutoScaleMode = AutoScaleMode.Dpi;
         ClientSize = new Size(760, 700); MinimumSize = new Size(700, 650);
